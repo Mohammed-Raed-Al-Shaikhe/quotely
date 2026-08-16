@@ -1,0 +1,9 @@
+@extends('layout',['title'=>'New quotation · Quotely']) @section('content')
+<div class="top"><div><h1>Create quotation</h1><p>It will be marked sent and receive a customer approval link.</p></div><a class="btn secondary" href="{{ route('dashboard') }}">Cancel</a></div>
+<form class="card" method="post" action="{{ route('quotes.store') }}">@csrf
+@if($errors->any())<div class="alert" style="background:#f8dfdc;color:#842e28">Please correct the highlighted fields.</div>@endif
+<div class="grid" style="grid-template-columns:1fr 1fr"><div><label>Customer</label><select name="customer_id">@foreach($customers as $customer)<option value="{{ $customer->id }}">{{ $customer->name }} — {{ $customer->company_name }}</option>@endforeach</select></div><div><label>Valid until</label><input type="date" name="valid_until" value="{{ old('valid_until',now()->addDays(14)->format('Y-m-d')) }}"></div></div>
+<label>Project title</label><input name="title" value="{{ old('title') }}" placeholder="Website redesign and development"><h2 style="margin-top:28px">Line items</h2><div id="items">
+@foreach([0,1] as $i)<div class="row"><div><label>Description</label><input name="items[{{ $i }}][description]" placeholder="{{ $i ? 'Implementation and launch' : 'Discovery and UX design' }}"></div><div><label>Quantity</label><input type="number" min="1" name="items[{{ $i }}][quantity]" value="1"></div><div><label>Unit price</label><input type="number" min="0" step="0.01" name="items[{{ $i }}][unit_price]" placeholder="1500.00"></div></div>@endforeach</div>
+<label>Notes and terms</label><textarea name="notes" placeholder="Payment terms, delivery timeline, and anything the customer should know.">{{ old('notes') }}</textarea><div style="margin-top:22px"><button class="btn">Create & generate link</button></div></form>
+@endsection
